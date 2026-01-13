@@ -1,0 +1,781 @@
+/* --- 1. DESIGN SYSTEM (Color Palette) --- */
+:root {
+    /* Warna Utama: Biru Laut yang Kuat & Profesional */
+    --primary: #0984E3;       /* Bright Blue */
+    --primary-dark: #0769b5;  /* Versi lebih gelap untuk Hover */
+    
+    /* Warna Aksen: Teal/Cyan (Menyegarkan) */
+    --accent: #00b894;
+    
+    /* Warna Background & Teks */
+    --bg-body: #F0F4F8;       /* Cool Grey/White */
+    --bg-white: #ffffff;
+    --text-main: #2C3E50;     /* Navy Blue Gelap (bacaan utama) */
+    --text-muted: #636e72;    /* Abu-abu (bacaan sekunder) */
+    
+    /* Gradients untuk Blobs */
+    --grad-blob-1: linear-gradient(45deg, #0984E3 0%, #74B9FF 100%); /* Blue Mix */
+    --grad-blob-2: linear-gradient(to top, #00b894 0%, #55efc4 100%); /* Teal Mix */
+}
+
+/* --- 2. RESET & BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* --- 3. NAVBAR --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background: var(--bg-white);
+    /* Shadow halus biru */
+    box-shadow: 0 4px 20px rgba(9, 132, 227, 0.08); 
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+}
+
+nav .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary); /* Logo ikut warna tema */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: var(--primary);
+}
+
+/* --- 4. HERO SECTION --- */
+.hero {
+    min-height: 100vh; /* Pakai min-height biar aman di HP */
+    padding-top: 100px;
+    padding-bottom: 40px;
+    display: flex;
+    align-items: center;
+    /* Background gradient sangat halus dari atas ke bawah */
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(240,244,248,1) 100%);
+}
+
+.container {
+    width: 84%;
+    margin: 0 auto;
+}
+
+.hero-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+/* --- Text Area --- */
+.hero-text { flex: 1; }
+
+.hero-text h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: var(--text-main);
+}
+
+.hero-text .highlight {
+    color: var(--primary); /* Menggunakan variabel biru */
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+/* Tombol CTA dengan warna tema */
+.cta-button {
+    padding: 15px 40px;
+    background-color: var(--primary);
+    color: var(--bg-white);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    /* Shadow biru yang bercahaya (Glow effect) */
+    box-shadow: 0 10px 25px rgba(9, 132, 227, 0.3);
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    background-color: var(--primary-dark);
+    box-shadow: 0 15px 30px rgba(9, 132, 227, 0.4);
+}
+
+/* --- Visual Area (Shapes) --- */
+.hero-visuals {
+    flex: 1;
+    position: relative;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Liquid Blobs dengan Gradient Baru */
+.liquid-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px); /* Blur lebih besar biar lebih dreamy */
+    opacity: 0.6;
+    z-index: -1;
+}
+
+.blob-1 {
+    width: 450px;
+    height: 450px;
+    background: var(--grad-blob-1); /* Biru Laut */
+    top: 50px;
+    right: 20px;
+    animation: morphing 15s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+    width: 300px;
+    height: 300px;
+    background: var(--grad-blob-2); /* Teal Segar */
+    bottom: 80px;
+    left: 50px;
+    animation: morphing 12s ease-in-out infinite alternate-reverse;
+}
+
+/* Gambar Utama */
+.main-image-box {
+    width: 400px;
+    height: 500px;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(44, 62, 80, 0.25); /* Shadow lebih gelap */
+    border: 5px solid var(--bg-white);
+    position: relative;
+    z-index: 2;
+}
+
+.main-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+}
+
+/* Dekorasi Kecil */
+.circle-deco {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #ffeaa7; /* Kuning soft untuk kontras dikit */
+    border-radius: 50%;
+    top: 80px;
+    right: 50px;
+    z-index: 1;
+    animation: floatUp 4s ease-in-out infinite;
+}
+
+/* --- Animations --- */
+@keyframes morphing {
+    0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+/* --- Responsive HP --- */
+@media (max-width: 900px) {
+    .hero-layout { flex-direction: column-reverse; text-align: center; }
+    .hero { padding-top: 120px; }
+    .hero-text h1 { font-size: 2.5rem; }
+    .hero-text p { margin-left: auto; margin-right: auto; }
+    .hero-visuals { height: 450px; margin-top: 20px; width: 100%; }
+    .blob-1 { width: 300px; height: 300px; top: 20px; right: auto; }
+    .blob-2 { display: none; }
+    .main-image-box { width: 280px; height: 350px; margin: 0 auto; }
+}
+
+
+
+
+
+/* --- STYLE HALAMAN PREFERENSI --- */
+
+.pref-container {
+    max-width: 800px;
+    margin: 100px auto 50px; /* Jarak dari navbar */
+    padding: 20px;
+}
+
+.pref-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.pref-header h2 {
+    font-size: 2rem;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 40px;
+}
+
+.form-group h3 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Grid Layout untuk Pilihan */
+.grid-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Responsif otomatis */
+    gap: 15px;
+}
+
+/* Modifier untuk kolom 3 (Budget) */
+.grid-options.col-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* --- LOGIKA VISUAL KARTU (PENTING) --- */
+
+/* 1. Sembunyikan Input Asli (Checkbox/Radio) */
+.option-card input {
+    display: none; 
+}
+
+/* 2. Style Kartu Default */
+.option-card .card-content {
+    background: var(--bg-white);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent; /* Border transparan buat transisi */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: 0.3s all;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.option-card .emoji {
+    font-size: 2rem;
+}
+
+/* 3. Efek Hover */
+.option-card:hover .card-content {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* 4. STATE CHECKED (Saat dipilih) */
+/* CSS Selector ini artinya: "Jika input dicentang, ubah style card-content setelahnya" */
+.option-card input:checked + .card-content {
+    border-color: var(--primary); /* Border jadi biru */
+    background-color: #e3f2fd; /* Background jadi biru muda sekali */
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(9, 132, 227, 0.2);
+}
+
+/* Button Full Width */
+.full-width {
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+}
+
+/* Responsif HP */
+@media (max-width: 600px) {
+    .grid-options.col-3 {
+        grid-template-columns: repeat(3, 1fr); /* Tetap 3 kolom di HP untuk budget */
+    }
+    .grid-options {
+        grid-template-columns: 1fr 1fr; /* 2 Kolom untuk kategori di HP */
+    }
+}
+/* --- UPDATE STYLE PREFERENSI (Tambahkan di bawah file) --- */
+
+/* Input Form Modern (Select & Number) */
+.modern-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 12px; /* Sudut melengkung */
+    font-size: 1rem;
+    background-color: var(--bg-white);
+    color: var(--text-main);
+    transition: 0.3s;
+    outline: none;
+}
+
+.modern-input:focus {
+    border-color: var(--primary); /* Fokus jadi biru */
+    box-shadow: 0 0 0 4px rgba(9, 132, 227, 0.1);
+}
+
+/* Layout Khusus Budget (Kiri Kanan) */
+.budget-inputs {
+    display: flex;
+    gap: 20px;
+}
+
+.input-box {
+    flex: 1;
+}
+
+.input-box label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Layout Grid 2 Kolom untuk Aktivitas (karena teksnya panjang) */
+.grid-options.col-2 {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.grid-options.col-2 .card-content {
+    flex-direction: row; /* Icon di samping teks */
+    text-align: left;
+    padding: 15px;
+    gap: 15px;
+}
+
+.grid-options.col-2 .emoji {
+    font-size: 1.5rem; /* Icon lebih kecil dikit */
+}
+
+/* Tombol Reset (Teks di bawah tombol utama) */
+.reset-button {
+    display: block;
+    margin: 15px auto 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+}
+
+.reset-button:hover {
+    color: var(--primary);
+}
+
+/* Responsive Budget di HP */
+@media (max-width: 600px) {
+    .budget-inputs {
+        flex-direction: column; /* Jadi atas bawah di HP */
+    }
+}
+
+
+
+
+
+
+
+
+/* --- STYLE HALAMAN LIST --- */
+
+.list-header {
+    margin-top: 100px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.list-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.filter-summary {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.filter-summary span {
+    background: #e1f5fe;
+    color: var(--primary);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* --- GRID SYSTEM --- */
+.destination-grid {
+    display: grid;
+    /* Grid otomatis: menyesuaikan lebar layar, minimal lebar kartu 300px */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 40px 0;
+}
+
+/* --- KARTU DESTINASI (Frontend Expert Style) --- */
+.dest-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.dest-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(9, 132, 227, 0.2);
+}
+
+.card-img {
+    height: 200px;
+    position: relative;
+}
+
+.card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-img .rating {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.card-body {
+    padding: 20px;
+    flex: 1; /* Agar tinggi kartu seragam */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.badge-city { color: var(--text-muted); font-weight: 600; }
+.badge-match { color: var(--accent); font-weight: bold; }
+
+.dest-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 5px;
+    color: var(--text-main);
+}
+
+.dest-card .price {
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.dest-card .desc {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    /* Trik memotong teks kalau kepanjangan (3 baris) */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tags {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tags span {
+    font-size: 0.75rem;
+    background: #f1f2f6;
+    color: #7f8c8d;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.btn-detail {
+    margin-top: auto; /* Dorong tombol ke paling bawah */
+    text-align: center;
+    background: var(--text-main);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-detail:hover {
+    background: var(--primary);
+}
+
+/* No Result Styling */
+.no-result {
+    grid-column: 1 / -1; /* Mengisi selebar layar */
+    text-align: center;
+    padding: 50px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+
+
+/* --- STYLE HALAMAN DETAIL --- */
+
+.detail-page-wrapper {
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+/* Layout Header (Kiri Gambar, Kanan Info) */
+.detail-header {
+    display: flex;
+    gap: 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    margin-bottom: 60px;
+}
+
+/* Sisi Kiri: Gambar */
+.detail-image-box {
+    flex: 1.2; /* Lebar 55% */
+    height: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.detail-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.price-tag {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Sisi Kanan: Info */
+.detail-info {
+    flex: 1; /* Lebar 45% */
+    display: flex;
+    flex-direction: column;
+}
+
+.city-badge {
+    color: var(--primary);
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.detail-info h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    color: var(--text-main);
+}
+
+.rating-box {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f1c40f; /* Warna Bintang */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 25px 0;
+}
+
+.detail-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.desc-text {
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+/* Tags Style */
+.features-box h4 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.tag-pill {
+    background: #eef2f7;
+    color: var(--text-main);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Section Rekomendasi */
+.recommendation-section {
+    padding-top: 40px;
+    border-top: 2px dashed #eee;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.section-title h2 {
+    font-size: 2rem;
+    color: var(--text-main);
+}
+
+.section-title p {
+    color: var(--text-muted);
+}
+### 2. Update CSS (`css/style.css`)
+
+Tambahkan style ini di bagian bawah file CSS agar peta terlihat rapi, punya sudut melengkung, dan bayangan (shadow) yang estetik.
+
+```css
+/* --- STYLE BAGIAN LOKASI --- */
+
+.location-section {
+    margin-bottom: 60px;
+}
+
+.map-wrapper {
+    width: 100%;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden; /* Agar sudut map ikut melengkung */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    border: 5px solid white; /* Bingkai putih */
+}
+
+.map-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Tombol Outline (Varian baru untuk tombol maps) */
+.cta-button.outline {
+    background-color: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    box-shadow: none;
+}
+
+.cta-button.outline:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive Tablet/HP */
+@media (max-width: 900px) {
+    .detail-header {
+        flex-direction: column; /* Jadi atas bawah */
+        padding: 20px;
+    }
+
+    .detail-image-box {
+        height: 250px;
+        flex: none;
+        width: 100%;
+    }
+
+    .detail-info h1 {
+        font-size: 1.8rem;
+    }
+}
