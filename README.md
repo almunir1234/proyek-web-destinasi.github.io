@@ -1,2 +1,2 @@
-# Proyek_Web_Destinasi.github.io
+# proyek-web-destinasi.github.io
 Untuk tugas matkul kecerdasan buatan 
