@@ -177,18 +177,22 @@ nav a:hover {
 .main-image-box {
     width: 400px;
     height: 500px;
-    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    border-radius: 30% 0% 0% 30%;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(44, 62, 80, 0.25); /* Shadow lebih gelap */
     border: 5px solid var(--bg-white);
     position: relative;
     z-index: 2;
+
+    /* Efek Transparan pada sisi kanan */
+    -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
+    mask-image: linear-gradient(to right, black 50%, transparent 100%);
 }
 
 .main-image-box img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
     transform: scale(1.1);
 }
 
@@ -226,7 +230,12 @@ nav a:hover {
     .hero-visuals { height: 450px; margin-top: 20px; width: 100%; }
     .blob-1 { width: 300px; height: 300px; top: 20px; right: auto; }
     .blob-2 { display: none; }
-    .main-image-box { width: 280px; height: 350px; margin: 0 auto; }
+    .main-image-box { width: 280px; height: 350px; margin: 0 auto; 
+                    border-radius: 0% 0% 30% 30%;
+                    /* Efek Transparan pada sisi kanan */
+                    -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
+                    mask-image: linear-gradient(to top, black 50%, transparent 100%);
+                    }
 }
 
 
