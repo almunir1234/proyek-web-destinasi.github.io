@@ -71,6 +71,48 @@
             </div>
         </div>
 
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <div class="section-title">
+                <h2>Ulasan Pengunjung 💬</h2>
+                <p>Apa kata pengunjung tentang tempat ini</p>
+            </div>
+            
+            <div id="reviewsContainer" class="reviews-container">
+                <!-- Reviews akan dimuat di sini -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="showAddReviewForm()" class="cta-button">+ Tambah Ulasan</button>
+            </div>
+        </div>
+
+        <!-- Form Tambah Ulasan (Hidden) -->
+        <div id="addReviewForm" style="display: none; margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 12px;">
+            <h3>Tambah Ulasan Baru</h3>
+            <div style="margin: 15px 0;">
+                <label>Rating:</label>
+                <div id="starRating" style="font-size: 24px; color: #FF9529; cursor: pointer;">
+                    <span onclick="setRating(1)">☆</span>
+                    <span onclick="setRating(2)">☆</span>
+                    <span onclick="setRating(3)">☆</span>
+                    <span onclick="setRating(4)">☆</span>
+                    <span onclick="setRating(5)">☆</span>
+                </div>
+                <input type="hidden" id="userRating" value="0">
+            </div>
+            <div style="margin: 15px 0;">
+                <input type="text" id="userName" placeholder="Nama Anda" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <textarea id="userComment" placeholder="Tulis ulasan Anda..." rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="submitReview()" class="cta-button">Kirim Ulasan</button>
+                <button onclick="cancelReview()" class="cta-button outline">Batal</button>
+            </div>
+        </div>
+
         <br><br>
 
         <div class="recommendation-section">
@@ -84,6 +126,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="js/review.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
@@ -103,6 +146,24 @@
             document.getElementById('d_name').innerText = currentDest.name;
             document.getElementById('d_city').innerText = `📍 ${currentDest.city.toUpperCase()}`;
             document.getElementById('d_rating').innerText = currentDest.rating;
+            
+            // Hitung rating dari ulasan, bukan dari data.js
+            const calculatedRating = calculateAverageRating(id);
+            const totalReviews = getTotalReviews(id);
+            
+            // Tampilkan rating yang dihitung dari ulasan
+            document.getElementById('d_rating').innerText = calculatedRating;
+            
+            // Tambahkan jumlah ulasan di samping rating
+            const ratingBox = document.querySelector('.rating-box');
+            ratingBox.innerHTML = `
+                <span class="star">⭐</span> 
+                <span id="d_rating">${calculatedRating}</span>
+                <span style="margin-left: 10px; font-size: 0.9em; color: #666;">
+                    (${totalReviews} ulasan)
+                </span>
+            `;
+            
             document.getElementById('d_desc').innerText = currentDest.desc;
             document.getElementById('d_price').innerText = currentDest.price === 0 ? "GRATIS" : `Rp ${currentDest.price.toLocaleString()}`;
 
@@ -155,7 +216,247 @@
                 `;
                 recContainer.innerHTML += card;
             });
+
+            // 5. Tampilkan ulasan
+            loadCombinedReviews(id);
         });
+        
+        // Fungsi untuk menampilkan ulasan
+        function displayReviews(destinationId) {
+            const container = document.getElementById('reviewsContainer');
+            const destinationReviews = reviews.filter(r => r.destinationId === destinationId);
+            
+            if (destinationReviews.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">Belum ada ulasan untuk tempat ini. Jadilah yang pertama!</p>';
+                return;
+            }
+            
+            let reviewsHTML = '';
+            destinationReviews.forEach(review => {
+                // Buat bintang rating
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    stars += i <= review.rating ? '★' : '☆';
+                }
+                
+                reviewsHTML += `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="user-avatar">${review.userPhoto}</div>
+                                <div>
+                                    <div class="reviewer-name">${review.userName}</div>
+                                    <div class="review-date">${review.date}</div>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                ${stars} ${review.rating}.0
+                            </div>
+                        </div>
+                        <div class="review-text">${review.comment}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = reviewsHTML;
+        }
+
+        // Fungsi untuk form ulasan
+        function showAddReviewForm() {
+            document.getElementById('addReviewForm').style.display = 'block';
+            document.getElementById('starRating').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function setRating(rating) {
+            const stars = document.querySelectorAll('#starRating span');
+            stars.forEach((star, index) => {
+                star.textContent = index < rating ? '★' : '☆';
+            });
+            document.getElementById('userRating').value = rating;
+        }
+
+        function submitReview() {
+            const rating = parseInt(document.getElementById('userRating').value);
+            const name = document.getElementById('userName').value.trim();
+            const comment = document.getElementById('userComment').value.trim();
+            const params = new URLSearchParams(window.location.search);
+            const destinationId = parseInt(params.get('id'));
+            
+            if (rating === 0 || !name || !comment) {
+                alert('Harap isi semua field dengan lengkap!');
+                return;
+            }
+            
+            // Simulasi tambah ulasan (di localStorage)
+            const newReview = {
+                id: Date.now(), // ID unik berdasarkan timestamp
+                destinationId: destinationId,
+                userName: name,
+                userPhoto: getRandomAvatar(),
+                rating: rating,
+                date: new Date().toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                }),
+                comment: comment
+            };
+            
+            // Simpan ke localStorage
+            let localReviews = JSON.parse(localStorage.getItem('wisataReviews') || '[]');
+            localReviews.push(newReview);
+            localStorage.setItem('wisataReviews', JSON.stringify(localReviews));
+            
+            // Update rating destinasi
+            updateDestinationRating(destinationId);
+            
+            // Refresh tampilan ulasan
+            loadCombinedReviews(destinationId);
+            cancelReview();
+            alert('Terima kasih! Ulasan Anda telah ditambahkan.');
+        }
+
+        function cancelReview() {
+            document.getElementById('addReviewForm').style.display = 'none';
+            document.getElementById('userName').value = '';
+            document.getElementById('userComment').value = '';
+            document.getElementById('userRating').value = '0';
+            // Reset bintang
+            const stars = document.querySelectorAll('#starRating span');
+            stars.forEach(star => star.textContent = '☆');
+        }
+
+        function getRandomAvatar() {
+            const avatars = ['👨', '👩', '👦', '👧', '🧔', '👴', '👵'];
+            return avatars[Math.floor(Math.random() * avatars.length)];
+        }
+
+        // Gabungkan ulasan dari data.js dan localStorage
+        function loadCombinedReviews(destinationId) {
+            const container = document.getElementById('reviewsContainer');
+            
+            // Ambil dari data statis
+            let allReviews = reviews.filter(r => r.destinationId === destinationId);
+            
+            // Ambil dari localStorage
+            const localReviews = JSON.parse(localStorage.getItem('wisataReviews') || '[]');
+            const localDestReviews = localReviews.filter(r => r.destinationId === destinationId);
+            
+            // Gabungkan
+            allReviews = [...allReviews, ...localDestReviews];
+            
+            // Urutkan berdasarkan ID terbaru
+            allReviews.sort((a, b) => b.id - a.id);
+            
+            // Tampilkan
+            if (allReviews.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">Belum ada ulasan untuk tempat ini. Jadilah yang pertama!</p>';
+                return;
+            }
+            
+            let reviewsHTML = '';
+            allReviews.forEach(review => {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    stars += i <= review.rating ? '★' : '☆';
+                }
+                
+                reviewsHTML += `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="user-avatar">${review.userPhoto}</div>
+                                <div>
+                                    <div class="reviewer-name">${review.userName}</div>
+                                    <div class="review-date">${review.date}</div>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                ${stars} ${review.rating}.0
+                            </div>
+                        </div>
+                        <div class="review-text">${review.comment}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = reviewsHTML;
+        }
+
+        function calculateAverageRating(destinationId) {
+            // Gabungkan ulasan statis dengan yang di localStorage
+            const staticReviews = reviews.filter(r => r.destinationId === destinationId);
+            const localReviews = JSON.parse(localStorage.getItem('wisataReviews') || '[]');
+            const localDestReviews = localReviews.filter(r => r.destinationId === destinationId);
+            
+            const allReviews = [...staticReviews, ...localDestReviews];
+            
+            if (allReviews.length === 0) return 0;
+            
+            // Hitung rata-rata
+            const total = allReviews.reduce((sum, review) => sum + review.rating, 0);
+            const average = total / allReviews.length;
+            
+            // Bulatkan ke 1 desimal
+            return Math.round(average * 10) / 10;
+        }
+
+        function getTotalReviews(destinationId) {
+            const staticReviews = reviews.filter(r => r.destinationId === destinationId);
+            const localReviews = JSON.parse(localStorage.getItem('wisataReviews') || '[]');
+            const localDestReviews = localReviews.filter(r => r.destinationId === destinationId);
+            
+            return staticReviews.length + localDestReviews.length;
+        }
+
+        function updateDestinationRating(destinationId) {
+            const calculatedRating = calculateAverageRating(destinationId);
+            
+            // Cari destinasi di array destinations
+            const destIndex = destinations.findIndex(item => item.id === destinationId);
+            if (destIndex !== -1) {
+                destinations[destIndex].rating = calculatedRating;
+                
+                // Simpan ke localStorage agar perubahan tetap
+                localStorage.setItem('wisataDestinations', JSON.stringify(destinations));
+                
+                // Update tampilan rating
+                const ratingElement = document.getElementById('d_rating');
+                if (ratingElement) {
+                    ratingElement.textContent = calculatedRating;
+                    
+                    // Update juga box rating
+                    const ratingBox = document.querySelector('.rating-box');
+                    const totalReviews = getTotalReviews(destinationId);
+                    ratingBox.innerHTML = `
+                        <span class="star">⭐</span> 
+                        <span id="d_rating">${calculatedRating}</span>
+                        <span style="margin-left: 10px; font-size: 0.9em; color: #666;">
+                            (${totalReviews} ulasan)
+                        </span>
+                    `;
+                }
+            }
+        }
+
+        // Fungsi untuk sync rating dari ulasan ke data destinations
+        function syncRatingsFromReviews() {
+            // Cek apakah ada data di localStorage
+            const storedDestinations = localStorage.getItem('wisataDestinations');
+            if (storedDestinations) {
+                const parsedDestinations = JSON.parse(storedDestinations);
+                
+                // Update destinations array dengan data dari localStorage
+                parsedDestinations.forEach((storedDest, index) => {
+                    if (destinations[index]) {
+                        destinations[index].rating = storedDest.rating;
+                    }
+                });
+            }
+        }
+
+        // Panggil saat pertama kali
+        syncRatingsFromReviews();
     </script>
 </body>
 </html>
